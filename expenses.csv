@@ -1,0 +1,5 @@
+amount,category,note,date
+100.0,Other,nope,2025-10-05
+100.0,food,first,2025-10-05
+200.0,travel,no,2025-10-05
+-300.0,shopping,nope,2024-05-12
