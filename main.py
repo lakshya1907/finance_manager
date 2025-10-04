@@ -14,7 +14,7 @@ def add_recurring():
     try:
         amount = float(input("Enter recurring amount (negative for expense, positive for income): "))
     except ValueError:
-        print("❌ Invalid amount.")
+        print(" Invalid amount.")
         return
 
     print(f"Available categories: {categories}")
