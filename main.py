@@ -5,6 +5,8 @@ from core.reports import show_charts, show_monthly_report
 from core.budgets import check_budgets
 from core.recurring import load_recurring, apply_recurring
 from datetime import datetime
+from core.ml.predict_expense import predict_expense
+
 
 # Load data
 expenses = load_csv("data/expenses.csv")
@@ -18,7 +20,7 @@ st.title("💰 Personal Finance Manager")
 
 menu = st.sidebar.radio(
     "📂 Menu",
-    ["Add Transaction", "View Summary", "Charts", "Monthly Report", "Budget Alerts"]
+    ["Add Transaction", "View Summary", "Charts", "Monthly Report", "Budget Alerts","ML Prediction"]
 )
 
 # ===========================================
@@ -89,3 +91,15 @@ elif menu == "Monthly Report":
 # ===========================================
 elif menu == "Budget Alerts":
     check_budgets(expenses)
+
+# ===========================================
+# ✅ 5️⃣ ML
+# ===========================================
+
+elif menu == "ML Prediction":
+    st.header("Expense Prediction")
+    category = st.selectbox("Select Category", ["food", "travel", "shopping", "bills", "entertainment", "other"])
+    if st.button("Predict"):
+        from core.ml.predict_expense import predict_expense
+        prediction = predict_expense(expenses, category)
+        st.success(f"Predicted next expense in '{category}': ${prediction:.2f}")
