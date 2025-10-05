@@ -1,5 +1,7 @@
 amount,category,note,date
-100.0,Other,nope,2025-10-05
-100.0,food,first,2025-10-05
-200.0,travel,no,2025-10-05
--300.0,shopping,nope,2024-05-12
+1000.0,travel,saket,2025-09-11
+-1000.0,food,saket,2025-09-10
+-500.0,shopping,zara,2025-09-24
+-1200.0,bills,car wash,2025-09-23
+750.0,salary,pay check,2025-09-30
+-120.0,entertainment,movie,2025-09-17

@@ -19,8 +19,19 @@ def add_transaction(expenses, amount, category, note, date_str=None):
     return transaction
 
 def get_summary(expenses):
-    """Return total income, expense, net savings."""
-    total_income = sum(e['amount'] for e in expenses if e['amount'] > 0)
-    total_expense = sum(abs(e['amount']) for e in expenses if e['amount'] < 0)
-    net_savings = total_income - total_expense
-    return {"income": total_income, "expense": total_expense, "net": net_savings}
+    total_income = 0
+    total_expense = 0
+
+    for e in expenses:
+        try:
+            amount = float(e['amount'])
+        except (ValueError, TypeError):
+            amount = 0
+
+        if amount > 0:
+            total_income += amount
+        else:
+            total_expense += abs(amount)
+
+    balance = total_income - total_expense
+    return {"income": total_income, "expense": total_expense, "balance": balance}

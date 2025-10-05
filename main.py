@@ -4,6 +4,7 @@ from core.transactions import add_transaction, get_summary
 from core.reports import show_charts, show_monthly_report
 from core.budgets import check_budgets
 from core.recurring import load_recurring, apply_recurring
+from datetime import datetime
 
 # Load data
 expenses = load_csv("data/expenses.csv")
@@ -15,31 +16,76 @@ if added > 0:
 
 st.title("💰 Personal Finance Manager")
 
-menu = st.sidebar.radio("Menu", ["Add Expense", "View Summary", "Charts", "Monthly Report", "Budget Alerts"])
+menu = st.sidebar.radio(
+    "📂 Menu",
+    ["Add Transaction", "View Summary", "Charts", "Monthly Report", "Budget Alerts"]
+)
 
-if menu == "Add Expense":
-    st.header(" Add New Transaction")
-    amount = st.number_input("Amount", step=10.0)
-    category = st.selectbox("Category", ["food", "travel", "shopping", "salary", "bills", "entertainment", "other"])
-    note = st.text_input("Note")
-    date_str = st.date_input("Date")
-    if st.button("Add Transaction"):
-        add_transaction(expenses, amount, category, note, str(date_str))
-        save_csv("data/expenses.csv", expenses, ["amount", "category", "note", "date"])
-        st.success(f"Added {category} - {amount}")
-        check_budgets(expenses)
+# ===========================================
+# ✅ 1️⃣ ADD TRANSACTION PAGE (updated UX)
+# ===========================================
+if menu == "Add Transaction":
+    st.header("➕ Add New Transaction")
 
+    with st.form("add_transaction_form", clear_on_submit=True):
+        # 🔸 Select transaction type
+        transaction_type = st.radio(
+            "Select type:",
+            ["Income", "Expense"],
+            horizontal=True
+        )
+
+        # 🔸 Amount input (always positive)
+        amount = st.number_input("Enter amount:", min_value=0.0, step=10.0)
+
+        # Convert expense to negative automatically
+        if transaction_type == "Expense":
+            amount = -amount
+
+        # 🔸 Category selection
+        category = st.selectbox(
+            "Category",
+            ["food", "travel", "shopping", "salary", "bills", "entertainment", "other"]
+        )
+
+        # 🔸 Optional note
+        note = st.text_input("Note (optional)")
+
+        # 🔸 Date input
+        date_str = st.date_input("Date", datetime.today())
+
+        # 🔸 Submit button
+        submitted = st.form_submit_button("Add Transaction")
+
+        if submitted:
+            add_transaction(expenses, amount, category, note, str(date_str))
+            save_csv("data/expenses.csv", expenses, ["amount", "category", "note", "date"])
+            st.success(f"✅ Added {transaction_type.lower()} of ₹{abs(amount):,.2f} in {category}!")
+            check_budgets(expenses)
+
+# ===========================================
+# ✅ 2️⃣ VIEW SUMMARY
+# ===========================================
 elif menu == "View Summary":
-    st.header(" Summary")
+    st.header("📊 Summary")
     summary = get_summary(expenses)
     st.write(summary)
 
+# ===========================================
+# ✅ 3️⃣ CHARTS
+# ===========================================
 elif menu == "Charts":
-    st.header(" Charts")
+    st.header("📈 Charts")
     show_charts(expenses)
 
+# ===========================================
+# ✅ 4️⃣ MONTHLY REPORT
+# ===========================================
 elif menu == "Monthly Report":
     show_monthly_report(expenses)
 
+# ===========================================
+# ✅ 5️⃣ BUDGET ALERTS
+# ===========================================
 elif menu == "Budget Alerts":
     check_budgets(expenses)
