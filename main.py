@@ -16,85 +16,85 @@ added = apply_recurring(expenses, recurring)
 if added > 0:
     st.info(f"{added} recurring transaction(s) added today!")
 
-st.title("💰 Personal Finance Manager")
+st.title("Personal Finance Manager")
 
 menu = st.sidebar.radio(
-    "📂 Menu",
+    "Menu",
     ["Add Transaction", "View Summary", "Charts", "Monthly Report", "Budget Alerts","ML Prediction","Analytics Dashboard"]
 )
 
-# ===========================================
-# ✅ 1️⃣ ADD TRANSACTION PAGE (updated UX)
-# ===========================================
+
+#   ADD TRANSACTION PAGE (updated UX)
+
 if menu == "Add Transaction":
-    st.header("➕ Add New Transaction")
+    st.header("Add New Transaction")
 
     with st.form("add_transaction_form", clear_on_submit=True):
-        # 🔸 Select transaction type
+        # Select transaction type
         transaction_type = st.radio(
             "Select type:",
             ["Income", "Expense"],
             horizontal=True
         )
 
-        # 🔸 Amount input (always positive)
+        # Amount input (always positive)
         amount = st.number_input("Enter amount:", min_value=0.0, step=10.0)
 
         # Convert expense to negative automatically
         if transaction_type == "Expense":
             amount = -amount
 
-        # 🔸 Category selection
+        # Category selection
         category = st.selectbox(
             "Category",
             ["food", "travel", "shopping", "salary", "bills", "entertainment", "other"]
         )
 
-        # 🔸 Optional note
+        # Optional note
         note = st.text_input("Note (optional)")
 
-        # 🔸 Date input
+        # Date input
         date_str = st.date_input("Date", datetime.today())
 
-        # 🔸 Submit button
+        # Submit button
         submitted = st.form_submit_button("Add Transaction")
 
         if submitted:
             add_transaction(expenses, amount, category, note, str(date_str))
             save_csv("data/expenses.csv", expenses, ["amount", "category", "note", "date"])
-            st.success(f"✅ Added {transaction_type.lower()} of ₹{abs(amount):,.2f} in {category}!")
+            st.success(f"Added {transaction_type.lower()} of ₹{abs(amount):,.2f} in {category}!")
             check_budgets(expenses)
 
-# ===========================================
-# ✅ 2️⃣ VIEW SUMMARY
-# ===========================================
+
+#   VIEW SUMMARY
+
 elif menu == "View Summary":
-    st.header("📊 Summary")
+    st.header("Summary")
     summary = get_summary(expenses)
     st.write(summary)
 
-# ===========================================
-# ✅ 3️⃣ CHARTS
-# ===========================================
+
+#  CHARTS
+
 elif menu == "Charts":
-    st.header("📈 Charts")
+    st.header("Charts")
     show_charts(expenses)
 
-# ===========================================
-# ✅ 4️⃣ MONTHLY REPORT
-# ===========================================
+
+#   MONTHLY REPORT
+
 elif menu == "Monthly Report":
     show_monthly_report(expenses)
 
-# ===========================================
-# ✅ 5️⃣ BUDGET ALERTS
-# ===========================================
+
+#   BUDGET ALERTS
+
 elif menu == "Budget Alerts":
     check_budgets(expenses)
 
-# ===========================================
-# ✅ 5️⃣ ML
-# ===========================================
+
+#   ML
+
 
 elif menu == "ML Prediction":
     st.header("Expense Prediction")
