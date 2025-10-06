@@ -20,7 +20,7 @@ st.title("💰 Personal Finance Manager")
 
 menu = st.sidebar.radio(
     "📂 Menu",
-    ["Add Transaction", "View Summary", "Charts", "Monthly Report", "Budget Alerts","ML Prediction"]
+    ["Add Transaction", "View Summary", "Charts", "Monthly Report", "Budget Alerts","ML Prediction","Analytics Dashboard"]
 )
 
 # ===========================================
@@ -103,3 +103,8 @@ elif menu == "ML Prediction":
         from core.ml.predict_expense import predict_expense
         prediction = predict_expense(expenses, category)
         st.success(f"Predicted next expense in '{category}': ${prediction:.2f}")
+
+
+elif menu == "Analytics Dashboard":
+    from core.analytics import show_analytics_dashboard
+    show_analytics_dashboard(expenses)
